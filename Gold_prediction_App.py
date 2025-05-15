@@ -3,9 +3,8 @@ import pickle
 import numpy as np
 import pandas as pd
 
-# Load the trained XGBoost model saved with pickle
-with open('xgboost_gold_model.pkl', 'rb') as f:
-    model = pickle.load(f)
+
+    model = pickle.load(open('xgboost_gold_model.pkl', 'rb')
 
 def forecast_xgboost(model, last_prices, n_steps=30, lag=5):
     lag_data = list(last_prices[-lag:])
