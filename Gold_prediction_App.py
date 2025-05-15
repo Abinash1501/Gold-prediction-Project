@@ -1,43 +1,22 @@
 import streamlit as st
-import pickle
-import numpy as np
 import pandas as pd
+import numpy as np
+import joblib
+from datetime import datetime
 
-# Load the trained XGBoost model saved with pickle
+# Load the model
 model = joblib.load('xgboost_gold_model.joblib')
 
-def forecast_xgboost(model, last_prices, n_steps=30, lag=5):
-    lag_data = list(last_prices[-lag:])
-    preds = []
-    for _ in range(n_steps):
-        features = np.array(lag_data[-lag:]).reshape(1, -1)
-        next_val = model.predict(features)[0]
-        preds.append(next_val)
-        lag_data.append(next_val)
-    return preds
+# App title
+st.title("Gold Price Prediction with XGBoost")
 
-st.title("Gold Price Forecasting with XGBoost")
+# Input section
+st.header("Enter input for next day prediction")
 
-st.write("Enter the most recent 5 gold prices (comma separated) to forecast the next 30 days.")
+# Example: 1-day lag input
+price_today = st.number_input("Enter the latest gold price", min_value=0.0)
 
-input_prices = st.text_input(
-    "Last 5 Gold Prices (comma separated):",
-    "1800,1805,1795,1810,1802"
-)
-
-if st.button("Forecast"):
-    try:
-        last_prices = [float(x.strip()) for x in input_prices.split(",")]
-        if len(last_prices) < 5:
-            st.error("Please enter at least 5 prices.")
-        else:
-            forecast = forecast_xgboost(model, last_prices, n_steps=30, lag=5)
-            forecast_dates = pd.date_range(start=pd.Timestamp.today() + pd.Timedelta(days=1), periods=30)
-            forecast_series = pd.Series(forecast, index=forecast_dates)
-
-            st.line_chart(forecast_series)
-            st.write("### Forecasted Gold Prices")
-            st.dataframe(forecast_series.rename("Predicted Price"))
-
-    except Exception as e:
-        st.error(f"Error: {e}")
+if st.button("Predict"):
+    X_input = np.array([[price_today]])  # Adjust shape if needed
+    prediction = model.predict(X_input)[0]
+    st.success(f"Predicted Gold Price for Next Day: ₹ {prediction:.2f}")
