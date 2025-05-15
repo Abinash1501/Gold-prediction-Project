@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 
-model = pickle.load(open('xgboost_gold_model.pkl', 'rb')
+model = pickle.load(open('xgboost_gold_model.pkl', 'rb'))
 
 def forecast_xgboost(model, last_prices, n_steps=30, lag=5):
     lag_data = list(last_prices[-lag:])
