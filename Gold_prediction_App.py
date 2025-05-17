@@ -5,6 +5,9 @@ from tensorflow.keras.models import load_model
 import joblib
 from datetime import datetime, timedelta
 from tensorflow.keras.models import load_model
+# This also works if you're using pure keras
+from keras.models import load_model
+
 
 
 # Load model and scaler
