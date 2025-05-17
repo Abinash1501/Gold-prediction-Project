@@ -4,6 +4,8 @@ import pandas as pd
 from tensorflow.keras.models import load_model
 import joblib
 from datetime import datetime, timedelta
+from tensorflow.keras.models import load_model
+
 
 # Load model and scaler
 model = load_model('lstm_gold_model.h5')
