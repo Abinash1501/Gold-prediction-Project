@@ -1,27 +1,27 @@
 import streamlit as st
 import numpy as np
+import pandas as pd
 from tensorflow.keras.models import load_model
 import joblib
 
 # Load model and scaler
-model = load_model("lstm_model.h5")
+model = load_model("model.h5")
 scaler = joblib.load("scaler.pkl")
 
-st.title("Gold Price Prediction (LSTM Model)")
-st.write("Enter the last 10 days of gold prices to predict the next day's price:")
+st.title("Gold Price Prediction (LSTM)")
 
-# Collect input prices
-prices = []
-for i in range(10):
-    price = st.number_input(f"Day {i+1} Price", min_value=0.0, step=0.01, format="%.2f", key=f"price_{i}")
-    prices.append(price)
+# User input
+input_data = st.text_input("Enter 5 previous days' prices separated by commas", "48000,48100,47950,48050,48200")
 
 if st.button("Predict"):
-    if all(p > 0 for p in prices):
-        prices_scaled = scaler.transform(np.array(prices).reshape(-1, 1))
-        X_input = np.reshape(prices_scaled, (1, 10, 1))
-        prediction = model.predict(X_input)
-        predicted_price = scaler.inverse_transform(prediction)[0][0]
-        st.success(f"Predicted Gold Price: ₹{predicted_price:.2f}")
-    else:
-        st.error("Please enter all 10 prices (non-zero).")
+    try:
+        values = np.array([float(x) for x in input_data.split(",")])
+        if len(values) != 5:
+            st.error("Please enter exactly 5 values.")
+        else:
+            scaled_input = scaler.transform(values.reshape(-1, 1)).reshape(1, 5, 1)
+            prediction = model.predict(scaled_input)
+            predicted_price = scaler.inverse_transform(prediction)[0][0]
+            st.success(f"Predicted next price: ₹{predicted_price:.2f}")
+    except Exception as e:
+        st.error(f"Error: {e}")
