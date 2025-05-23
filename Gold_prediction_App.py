@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 
 
 # Load model and scaler
-model = load_model('model.joblib')
+model = joblib.load('model.joblib')
 
 # Load original data for sequence base
 df = pd.read_csv('gold_data.csv', parse_dates=['date'])
