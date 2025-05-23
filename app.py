@@ -1,4 +1,8 @@
 import streamlit as st
+
+st.title("Gold Price Prediction")
+
+import streamlit as st
 import numpy as np
 import pandas as pd
 from tensorflow.keras.models import load_model
