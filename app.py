@@ -1,3 +1,4 @@
+!pip install --upgrade pip
 import streamlit as st
 
 st.title("Gold Price Prediction")
